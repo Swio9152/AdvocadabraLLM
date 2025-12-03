@@ -6,10 +6,8 @@ import numpy as np
 from tqdm import tqdm
 from sentence_transformers import SentenceTransformer
 
-# ----------------------------------------------------------
-# CONFIG
-# ----------------------------------------------------------
-DI_PATH = "/Users/uditkandi/project 3-1/di_dataset2.jsonl"  # your DI path
+
+DI_PATH = "/Users/uditkandi/project 3-1/di_dataset2.jsonl"  
 EMBED_DIR = "./di_prime_embeddings"
 os.makedirs(EMBED_DIR, exist_ok=True)
 
@@ -17,13 +15,10 @@ EMB_FILE = os.path.join(EMBED_DIR, "embeddings.npy")
 META_FILE = os.path.join(EMBED_DIR, "metadata.joblib")
 CHECKPOINT_FILE = os.path.join(EMBED_DIR, "checkpoint.json")
 
-MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"  # 384d, CPU-friendly
-BATCH_SIZE = 64  # tune lower if RAM cries
+MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"  
+BATCH_SIZE = 64  
 
 
-# ----------------------------------------------------------
-# Load existing checkpoint
-# ----------------------------------------------------------
 def load_checkpoint():
     if not os.path.exists(CHECKPOINT_FILE):
         return {"done": 0}
@@ -38,20 +33,15 @@ def save_checkpoint(state):
         json.dump(state, f)
 
 
-# ----------------------------------------------------------
-# Useful: which text goes into the embedding
-# ----------------------------------------------------------
+
 def make_text(case):
-    # Use existing DI fields in priority order
     for field in ["summary", "case_summary", "facts", "raw_text"]:
         if field in case and case[field]:
             return " ".join(case[field].split())[:10000]
     return ""
 
 
-# ----------------------------------------------------------
-# Main function
-# ----------------------------------------------------------
+
 def build_embeddings():
     print("Loading DI...")
     cases = []
@@ -83,7 +73,6 @@ def build_embeddings():
 
     model = SentenceTransformer(MODEL_NAME)
 
-    # Loop with checkpointing
     t0 = time.time()
     processed = start_idx
 
@@ -119,8 +108,6 @@ def build_embeddings():
     print("Embeddings saved:", EMB_FILE)
 
 
-# ----------------------------------------------------------
-# Run
-# ----------------------------------------------------------
+
 if __name__ == "__main__":
     build_embeddings()
