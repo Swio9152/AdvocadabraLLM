@@ -11,7 +11,6 @@ FAISS_FILE = f"{EMB_DIR}/faiss.index"
 
 DI_PATH = "/Users/uditkandi/project 3-1/di_dataset2.jsonl"
 
-
 print("Loading FAISS index...")
 index = faiss.read_index(FAISS_FILE)
 
@@ -22,25 +21,29 @@ print("Loading DI...")
 cases = []
 with open(DI_PATH, "r", encoding="utf-8") as f:
     for line in f:
-        try: 
+        try:
             cases.append(json.loads(line))
         except:
             pass
 
-print("Loading embedding model...")
-model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+print("Loading embedding model (e5-base)...")
+model = SentenceTransformer("intfloat/e5-base")   # <-- FIXED
 
 
 def retrieve_similar_cases(query_text, k=10):
     """Return top-k UNIQUE similar cases (no duplicate case_ids)."""
 
+    # e5 recommends using "query: " prefix
+    query_text = "query: " + query_text
+
+    # Encode and normalize
     query_emb = model.encode(query_text, convert_to_numpy=True).astype("float32")
-    query_emb = np.expand_dims(query_emb, axis=0)
+    faiss.normalize_L2(query_emb.reshape(1, -1))
 
     # Fetch extra neighbors to ensure we get k unique case_ids
     SEARCH_LIMIT = max(k * 5, 50)
 
-    distances, indices = index.search(query_emb, SEARCH_LIMIT)
+    distances, indices = index.search(query_emb.reshape(1, -1), SEARCH_LIMIT)
 
     results = []
     seen_ids = set()
@@ -54,13 +57,12 @@ def retrieve_similar_cases(query_text, k=10):
 
         seen_ids.add(cid)
 
-        # get text
         case = cases[idx]
         sample = case.get("summary") or case.get("raw_text", "")[:200]
 
         results.append({
             "case_id": cid,
-            "score": float(dist),
+            "score": float(dist),   # cosine similarity (because of IP index + L2 norm)
             "text_sample": sample
         })
 
