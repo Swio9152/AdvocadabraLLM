@@ -72,6 +72,11 @@ AdvocadabraLLM/
 ```bash
 cd backend
 pip install -r requirements.txt
+
+# Generate required data files for SCR/PCR services
+python3 setup_dev_environment.py
+
+# Start backend server
 python backend_server.py
 ```
 Backend runs on: http://localhost:8000
@@ -83,6 +88,10 @@ npm install
 npm run dev
 ```
 Frontend runs on: http://localhost:5173
+
+### 3. Test Login
+- Email: `test@example.com`
+- Password: `test123`
 
 ### 3. Access the Application
 Open http://localhost:5173 and create an account to start using the legal AI system.
