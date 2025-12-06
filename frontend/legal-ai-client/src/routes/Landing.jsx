@@ -9,23 +9,48 @@ export default function Landing() {
       {/* HERO */}
       <section className="pt-20 pb-24">
         <div className="max-w-6xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          
-          {/* LEFT */}
+            {/* LEFT */}
           <div>
-            <h1 className="text-4xl md:text-6xl font-semibold leading-tight">
-              Advoca-Dabra  
+            {/* Logo */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="mb-8"
+            >
+              <img 
+                src="/assets/advoca-dabra.jpeg" 
+                alt="AdvocaDabra Logo" 
+                className="h-20 w-auto md:h-24"
+              />
+            </motion.div>
+
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-4xl md:text-6xl font-semibold leading-tight"
+            >
+              AdvocaDabra  
               <span className="block text-muted text-xl md:text-2xl mt-3">
                 AI-powered legal judgment analysis & prediction.
               </span>
-            </h1>
-
-            <p className="mt-6 text-muted max-w-xl text-base md:text-lg">
+            </motion.h1>            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="mt-6 text-muted max-w-xl text-base md:text-lg"
+            >
               A clean, modern interface designed to help lawyers, students, and 
               researchers understand case outcomes faster and more reliably.
-            </p>
+            </motion.p>
 
-            <div className="mt-8 flex gap-3">
-              <Link
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="mt-8 flex gap-3"
+            >              <Link
                 className="px-6 py-3 rounded-full bg-ink text-white text-sm font-medium"
                 to="/signup"
               >
@@ -38,7 +63,7 @@ export default function Landing() {
               >
                 Login
               </Link>
-            </div>
+            </motion.div>
           </div>
 
           {/* RIGHT — Hero Image */}
