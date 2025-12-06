@@ -8,34 +8,19 @@ export default function Landing() {
 
       {/* HERO */}
       <section className="pt-20 pb-24">
-        <div className="max-w-6xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* LEFT */}
+        <div className="max-w-6xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">          {/* LEFT */}
           <div>
-            {/* Logo */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="mb-8"
-            >
-              <img 
-                src="/assets/advoca-dabra.jpeg" 
-                alt="AdvocaDabra Logo" 
-                className="h-20 w-auto md:h-24"
-              />
-            </motion.div>
-
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              transition={{ duration: 0.6 }}
               className="text-4xl md:text-6xl font-semibold leading-tight"
             >
               AdvocaDabra  
               <span className="block text-muted text-xl md:text-2xl mt-3">
                 AI-powered legal judgment analysis & prediction.
               </span>
-            </motion.h1>            <motion.p 
+            </motion.h1><motion.p 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -64,16 +49,19 @@ export default function Landing() {
                 Login
               </Link>
             </motion.div>
-          </div>
-
-          {/* RIGHT — Hero Image */}
-          <div className="rounded-3xl shadow-subtle overflow-hidden">
+          </div>          {/* RIGHT — Logo Display */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex items-center justify-center p-8"
+          >
             <img
-              src="/assets/product-demo.jpg"
-              className="w-full h-full object-cover"
-              alt="Advoca-Dabra preview"
+              src="/assets/advoca-dabra.jpeg"
+              className="w-full max-w-lg h-auto object-contain rounded-2xl shadow-lg"
+              alt="AdvocaDabra Logo"
             />
-          </div>
+          </motion.div>
         </div>
       </section>
 

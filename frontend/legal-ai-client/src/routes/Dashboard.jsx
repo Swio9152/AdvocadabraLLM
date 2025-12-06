@@ -421,15 +421,21 @@ export default function Dashboard() {
     <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-semibold text-gray-900">
-                Legal AI
-              </h1>
-              <p className="text-gray-600 mt-1">
-                Welcome back, {user?.name || user?.email}
-              </p>
+        <div className="max-w-7xl mx-auto px-6 py-6">          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-4">
+              <img 
+                src="/assets/advoca-dabra.jpeg" 
+                alt="AdvocaDabra" 
+                className="h-10 w-auto"
+              />
+              <div>
+                <h1 className="text-2xl font-semibold text-gray-900">
+                  AdvocaDabra
+                </h1>
+                <p className="text-gray-600 mt-1">
+                  Welcome back, {user?.name || user?.email}
+                </p>
+              </div>
             </div>
             <button
               onClick={logout}
