@@ -65,9 +65,14 @@ fi
 
 pip3 install -r requirements.txt
 
-# Generate development environment
-echo "🗃️  Generating development data files..."
-python3 setup_dev_environment.py
+# Check if embeddings exist, if not provide instructions
+echo "🗃️  Checking data files..."
+if [ ! -f "di_prime_embeddings/embeddings.npy" ] || [ ! -f "di_prime_embeddings/faiss.index" ]; then
+    echo "⚠️  Warning: Full embeddings not found"
+    echo "   To use all 103,977 legal cases, run:"
+    echo "   cd backend && python3 Embeddings.py && python3 build_faiss.py"
+    echo "   For now, continuing with available data..."
+fi
 
 # Create test user if database doesn't exist
 if [ ! -f "users.db" ]; then

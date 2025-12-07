@@ -28,6 +28,8 @@ def load_checkpoint():
 
 
 def save_checkpoint(state):
+    # Convert numpy int64 to regular int for JSON serialization
+    state = {k: int(v) if isinstance(v, (np.integer, np.int64)) else v for k, v in state.items()}
     with open(CHECKPOINT_FILE, "w") as f:
         json.dump(state, f)
 

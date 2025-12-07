@@ -9,8 +9,7 @@ EMB_FILE = f"{EMB_DIR}/embeddings.npy"
 META_FILE = f"{EMB_DIR}/metadata.joblib"
 FAISS_FILE = f"{EMB_DIR}/faiss.index"
 
-# Use local mock dataset for development
-DI_PATH = f"{EMB_DIR}/mock_dataset.jsonl"
+DI_PATH = "/Users/srinandanasarmakesapragada/Documents/data_raw/di_dataset.jsonl"
 
 print("Loading FAISS index...")
 index = faiss.read_index(FAISS_FILE)
@@ -42,7 +41,8 @@ def retrieve_similar_cases(query_text, k=10):
     faiss.normalize_L2(query_emb.reshape(1, -1))
 
     # Fetch extra neighbors to ensure we get k unique case_ids
-    SEARCH_LIMIT = max(k * 5, 50)
+    # Increase search limit significantly to handle duplicates
+    SEARCH_LIMIT = max(k * 20, 200)
 
     distances, indices = index.search(query_emb.reshape(1, -1), SEARCH_LIMIT)
 
@@ -50,7 +50,14 @@ def retrieve_similar_cases(query_text, k=10):
     seen_ids = set()
 
     for dist, idx in zip(distances[0], indices[0]):
-        cid = metadata[idx]["case_id"]
+        # Check for valid index
+        if idx < 0 or idx >= len(metadata):
+            continue
+            
+        try:
+            cid = metadata[idx]["case_id"]
+        except (KeyError, IndexError):
+            continue
 
         # skip duplicates
         if cid in seen_ids:
@@ -58,23 +65,28 @@ def retrieve_similar_cases(query_text, k=10):
 
         seen_ids.add(cid)
 
-        case = cases[idx]
-        sample = case.get("summary") or case.get("raw_text", "")[:20000]
+        try:
+            case = cases[idx]
+            sample = case.get("summary") or case.get("raw_text", "")
 
-        results.append({
-            "case_id": cid,
-            "score": float(dist),   # cosine similarity (because of IP index + L2 norm)
-            "text_sample": sample
-        })
+            results.append({
+                "case_id": cid,
+                "score": float(dist),   # cosine similarity (because of IP index + L2 norm)
+                "text_sample": sample,
+                "title": case.get("title", ""),
+                "court": case.get("court", ""),
+                "date": case.get("date", "")
+            })
 
-        if len(results) == k:
-            break
+            if len(results) == k:
+                break
+        except (IndexError, KeyError):
+            continue
 
     return results
 
 
 if __name__ == "__main__":
-    
     print("Enter your query:")
     query = input("> ")
 

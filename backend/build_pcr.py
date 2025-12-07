@@ -11,8 +11,7 @@ from sentence_transformers import SentenceTransformer
 EMB_DIR = "./di_prime_embeddings"
 META_FILE = f"{EMB_DIR}/metadata.joblib"
 FAISS_FILE = f"{EMB_DIR}/faiss.index"
-# Use local mock dataset for development
-DI_PATH = f"{EMB_DIR}/mock_dataset.jsonl"
+DI_PATH = "/Users/srinandanasarmakesapragada/Documents/data_raw/di_dataset.jsonl"
 
 # ---------------------------------------------
 # Load resources
@@ -160,7 +159,7 @@ def recommend_precedents(query_text, k=10, sample_size=1000, min_length=800, sea
         )
 
         # sample text sized by sample_size param (None => full)
-        sample_text = raw
+        sample_text = raw if sample_size is None else raw[:sample_size]
 
         candidates.append({
             "case_id": cid,
