@@ -68,7 +68,7 @@ export default function Landing() {
 
       {/* FEATURES SECTION */}
       <section className="max-w-6xl mx-auto px-4 md:px-6 pb-20">
-        <h2 className="text-3xl font-semibold mb-6">SCR, PCR, LJP</h2>
+        <h2 className="text-3xl font-semibold mb-6">What AdvocaDabra Can Do</h2>
 
         <div className="grid md:grid-cols-3 gap-6">
           {[
