@@ -33,29 +33,6 @@ api.interceptors.response.use(
   }
 );
 
-// Auth API
-export const authAPI = {
-  login: async (email, password) => {
-    const response = await api.post('/auth/login', { email, password });
-    return response.data;
-  },
-
-  signup: async (email, password, name) => {
-    const response = await api.post('/auth/signup', { email, password, name });
-    return response.data;
-  },
-
-  verify: async () => {
-    const response = await api.get('/auth/verify');
-    return response.data;
-  },
-
-  logout: () => {
-    localStorage.removeItem('advocadabra_token');
-    localStorage.removeItem('advocadabra_user');
-  }
-};
-
 // File API
 export const fileAPI = {
   upload: async (file, onUploadProgress) => {

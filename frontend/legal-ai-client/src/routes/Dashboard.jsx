@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useAuth } from "../hooks/useAuth.jsx";
-import { fileAPI, aiAPI } from "../lib/api.js";
+import { useAuth } from "../Auth.jsx";
+import { fileAPI, aiAPI } from "../api.js";
 
 // File upload is now integrated into IntegratedAnalysis component
 
