@@ -18,7 +18,7 @@ function Navbar() {
           />
         </Link>
         <nav className="hidden md:flex items-center gap-8 text-[14px] text-gray-600">
-          <Link to="/team" className="hover:text-gray-900">Team</Link>
+          <Link to="/team" className="hover:text-gray-900">About Us</Link>
           <Link to="/login" className="hover:text-gray-900">Login</Link>
           <Link to="/signup" className="hover:text-gray-900">Signup</Link>
         </nav>
