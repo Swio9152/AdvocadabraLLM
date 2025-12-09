@@ -3,6 +3,7 @@ import { Routes, Route, useLocation, Link } from "react-router-dom";
 import { AuthProvider, ProtectedRoute, Login, Signup } from "./Auth.jsx";
 import Landing from "./routes/Landing.jsx";
 import Dashboard from "./routes/Dashboard.jsx";
+import Team from "./routes/Team.jsx";
 
 // Simple Navbar Component (embedded)
 function Navbar() {
@@ -17,6 +18,7 @@ function Navbar() {
           />
         </Link>
         <nav className="hidden md:flex items-center gap-8 text-[14px] text-gray-600">
+          <Link to="/team" className="hover:text-gray-900">Team</Link>
           <Link to="/login" className="hover:text-gray-900">Login</Link>
           <Link to="/signup" className="hover:text-gray-900">Signup</Link>
         </nav>
@@ -35,6 +37,7 @@ function AppContent() {
       {showNavbar && <Navbar />}
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/team" element={<Team />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 

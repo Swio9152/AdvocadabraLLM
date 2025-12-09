@@ -28,9 +28,7 @@ export default function Landing() {
             >
               A clean, modern interface designed to help lawyers, students, and 
               researchers understand case outcomes faster and more reliably.
-            </motion.p>
-
-            <motion.div 
+            </motion.p>            <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -103,9 +101,7 @@ export default function Landing() {
           <h2 className="text-2xl font-semibold">Start analyzing smarter.</h2>
           <p className="text-muted mt-2 text-sm">
             Create an account and try Advoca-Dabra today.
-          </p>
-
-          <div className="mt-6 flex justify-center gap-3">
+          </p>          <div className="mt-6 flex justify-center gap-3">
             <Link to="/signup" className="px-6 py-3 rounded-full bg-ink text-white text-sm">
               Create Account
             </Link>
