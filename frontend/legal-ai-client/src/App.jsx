@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, useLocation, Link } from "react-router-dom";
-import { AuthProvider, ProtectedRoute, Login, Signup } from "./Auth.jsx";
+import { AuthProvider, Login, Signup, ProtectedRoute } from "./Auth.jsx";
 import Landing from "./routes/Landing.jsx";
 import Dashboard from "./routes/Dashboard.jsx";
 import Team from "./routes/Team.jsx";
@@ -41,7 +41,7 @@ function AppContent() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* Protected Dashboard */}
+        {/* 🔒 Protect Dashboard */}
         <Route
           path="/dashboard"
           element={
