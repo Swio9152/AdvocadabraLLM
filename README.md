@@ -71,33 +71,28 @@ AdvocadabraLLM/
 - Node.js 16+
 - 8GB+ RAM (for embeddings)
 
-### 1. Backend Setup
+### **🚀 One-Command Setup:**
 ```bash
-cd backend
-pip install -r requirements.txt
+# Set up development environment
+./dev.sh setup
 
-# Generate required data files for SCR/PCR services
-python3 setup_dev_environment.py
-
-# Start backend server
-python backend_server.py
+# Start development servers
+./dev.sh dev
 ```
-Backend runs on: http://localhost:8000
 
-### 2. Frontend Setup
+### **⚡ Manual Setup:**
 ```bash
-cd frontend/legal-ai-client
-npm install
-npm run dev
+# Backend
+cd backend && pip install -r requirements.txt && python backend_server.py &
+
+# Frontend  
+cd frontend/legal-ai-client && npm install && npm run dev
 ```
-Frontend runs on: http://localhost:5173
 
-### 3. Test Login
-- Email: `test@example.com`
-- Password: `test123`
-
-### 3. Access the Application
-Open http://localhost:5173 and create an account to start using the legal AI system.
+### **🌐 Access Points:**
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:8000
+- **System Startup**: `./start_system.sh`
 
 ## Usage
 
@@ -215,20 +210,20 @@ This project is for educational and research purposes in legal AI technology.
 
 ## Quick Reference
 
-| Component | Command | URL |
-|-----------|---------|-----|
-| **Full System** | `./start_system.sh` | Frontend: http://localhost:5173 |
-| **Backend Only** | `cd backend && python backend_server.py` | API: http://localhost:8000 |
-| **Frontend Only** | `cd frontend/legal-ai-client && npm run dev` | App: http://localhost:5173 |
-| **Run Tests** | `python3 test_system.py` | All endpoints tested |
-| **Clean Project** | `python3 cleanup.py` | Maintenance & stats |
+| Task | Command | Description |
+|------|---------|-------------|
+| **🚀 Setup** | `./dev.sh setup` | Complete environment setup |
+| **💻 Development** | `./dev.sh dev` | Start both servers |
+| **🏗️ Build** | `./dev.sh build` | Production build |
+| **🧹 Clean** | `./dev.sh clean` | Remove temp files |
+| **🎯 Full System** | `./start_system.sh` | Original startup script |
 
 ## Development Workflow
 
-1. **Start Development**: `./start_system.sh`
-2. **Make Changes**: Edit files in `backend/` or `frontend/legal-ai-client/`
-3. **Test Changes**: `python3 test_system.py`
-4. **Clean Up**: `python3 cleanup.py`
+1. **Setup**: `./dev.sh setup` (one time)
+2. **Develop**: `./dev.sh dev` (daily)
+3. **Build**: `./dev.sh build` (for production)
+4. **Clean**: `./dev.sh clean` (maintenance)
 
 ---
 
