@@ -4,6 +4,7 @@ import { AuthProvider, Login, Signup, ProtectedRoute } from "./Auth.jsx";
 import Landing from "./routes/Landing.jsx";
 import Dashboard from "./routes/Dashboard.jsx";
 import Team from "./routes/Team.jsx";
+import LegalJudgmentPrediction from "./components/LegalJudgmentPrediction.jsx";
 
 // Simple Navbar Component (embedded)
 function Navbar() {
@@ -47,6 +48,16 @@ function AppContent() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        
+        {/* 🔒 Protect LJP */}
+        <Route
+          path="/ljp"
+          element={
+            <ProtectedRoute>
+              <LegalJudgmentPrediction />
             </ProtectedRoute>
           }
         />

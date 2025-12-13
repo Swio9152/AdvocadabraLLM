@@ -73,6 +73,35 @@ export const aiAPI = {
   pcr: async (query, k = 5, explanation = false) => {
     const response = await api.post('/pcr', { query, k, explanation });
     return response.data;
+  },
+
+  ljp: async (caseText, topK = 5) => {
+    const response = await api.post('/ljp', { 
+      case_text: caseText, 
+      top_k: topK 
+    });
+    return response.data;
+  }
+};
+
+// LJP (Legal Judgment Prediction) API
+export const ljpAPI = {
+  predict: async (case_text) => {
+    try {
+      const response = await api.post('/ljp/predict', { case_text });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getStatus: async () => {
+    try {
+      const response = await api.get('/ljp/status');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   }
 };
 

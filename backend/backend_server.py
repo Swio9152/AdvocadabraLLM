@@ -44,6 +44,16 @@ def get_pcr_functions():
         print(f"Warning: PCR not available: {e}")
         return None, None
 
+def get_ljp_functions():
+    try:
+        # Import the LJP module functions
+        sys.path.append(os.path.join(os.path.dirname(__file__)))
+        from ljp import load_embeddings, build_dataframe, train_model, explain_case
+        return load_embeddings, build_dataframe, train_model, explain_case
+    except Exception as e:
+        print(f"Warning: LJP not available: {e}")
+        return None, None, None, None
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-change-in-production'
 app.config['UPLOAD_FOLDER'] = './uploads'
@@ -437,6 +447,109 @@ def precedent_case_retrieval():
     except Exception as e:
         return jsonify({'error': f'PCR analysis failed: {str(e)}'}), 500
 
+@app.route('/api/ljp/predict', methods=['POST'])
+@require_auth
+def legal_judgment_prediction():
+    """Legal Judgment Prediction with XAI"""
+    try:
+        data = request.get_json()
+        case_text = data.get('case_text', '').strip()
+        top_k = data.get('top_k', 5)
+        
+        if not case_text:
+            return jsonify({'error': 'Case text is required'}), 400
+        
+        if len(case_text.strip()) < 50:
+            return jsonify({'error': 'Case text too short. Please provide detailed case information (minimum 50 characters).'}), 400
+        
+        load_embeddings, build_dataframe, train_model, explain_case = get_ljp_functions()
+        if not explain_case:
+            return jsonify({'error': 'LJP service not available'}), 503
+        
+        # Load the LJP model and data if not already loaded
+        global ljp_model, ljp_label_encoder, ljp_embeddings, ljp_index
+        
+        # Initialize model variables if they don't exist
+        try:
+            # Check if all required variables are loaded
+            _ = ljp_model, ljp_label_encoder, ljp_embeddings, ljp_index
+        except NameError:
+            # One or more variables don't exist, load everything
+            try:
+                import joblib
+                from pathlib import Path
+                
+                print("[LJP] Loading model and embeddings...")
+                
+                # Load the trained model
+                model_path = Path(__file__).parent / "ljp_model_final.joblib"
+                if model_path.exists():
+                    bundle = joblib.load(model_path)
+                    ljp_model = bundle["clf"]
+                    ljp_label_encoder = bundle["label_enc"]
+                    print(f"[LJP] Model loaded with classes: {ljp_label_encoder.classes_}")
+                else:
+                    return jsonify({'error': 'LJP model not found. Please train the model first.'}), 503
+                
+                # Load embeddings and index
+                ljp_embeddings, ljp_index, metadata = load_embeddings()
+                print(f"[LJP] Embeddings loaded: {ljp_embeddings.shape}")
+                
+            except Exception as e:
+                print(f"[LJP] Error loading model: {e}")
+                return jsonify({'error': f'Failed to load LJP model: {str(e)}'}), 503
+        
+        # Get prediction and explanation
+        result = explain_case(case_text, ljp_model, ljp_label_encoder, ljp_embeddings, ljp_index, top_k=top_k)
+        
+        return jsonify({
+            'success': True,
+            'case_text': case_text,
+            'prediction': result['prediction'],
+            'probability': result['probability'],
+            'explanation': {
+                'neighbor_influence': result['neighbor_influence_delta'],
+                'prob_without_neighbors': result['prob_without_neighbors'],
+                'evidence': result['evidence']
+            }
+        })
+    
+    except Exception as e:
+        return jsonify({'error': f'LJP analysis failed: {str(e)}'}), 500
+
+@app.route('/api/ljp/status', methods=['GET'])
+@require_auth
+def ljp_status():
+    """Get LJP service status"""
+    try:
+        load_embeddings, build_dataframe, train_model, explain_case = get_ljp_functions()
+        if not explain_case:
+            return jsonify({
+                'success': False,
+                'status': 'unavailable',
+                'message': 'LJP service not available'
+            }), 503
+        
+        # Check if model file exists
+        from pathlib import Path
+        model_path = Path(__file__).parent / "ljp_model_final.joblib"
+        model_exists = model_path.exists()
+        
+        return jsonify({
+            'success': True,
+            'status': 'available' if model_exists else 'model_missing',
+            'model_exists': model_exists,
+            'model_path': str(model_path),
+            'message': 'LJP service ready' if model_exists else 'LJP model needs to be trained'
+        })
+    
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'status': 'error',
+            'message': f'LJP status check failed: {str(e)}'
+        }), 500
+
 @app.route('/api/analyze-file', methods=['POST'])
 @require_auth
 def analyze_file():
@@ -539,6 +652,7 @@ if __name__ == '__main__':
     print("Starting AdvocaDabra Backend Server...")
     print("SCR (Similar Case Retrieval) - Ready")
     print("PCR (Precedent Case Retrieval) - Ready")
+    print("LJP (Legal Judgment Prediction) - Ready")
     print("Authentication System - Ready")
     print("File Upload System - Ready")
     print("\nServer running on http://localhost:8000")

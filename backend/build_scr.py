@@ -86,14 +86,39 @@ def retrieve_similar_cases(query_text, k=10):
     return results
 
 
+def recall_at_k(results, relevant_case_ids):
+    retrieved_case_ids = {r['case_id'] for r in results}
+    relevant_set = set(relevant_case_ids)
+    intersection = retrieved_case_ids & relevant_set
+    if len(relevant_set) == 0:
+        return 0.0
+    return len(intersection) / len(relevant_set)
+
+
+def evaluate_scr(eval_file, k=10):
+    with open(eval_file, 'r') as f:
+        eval_data = json.load(f)
+    
+    recalls = []
+    for item in eval_data:
+        query = item['query']
+        relevant_ids = item['relevant_case_ids']
+        
+        results = retrieve_similar_cases(query, k=k)
+        recall = recall_at_k(results, relevant_ids)
+        recalls.append(recall)
+        
+        print(f"Query: {query[:50]}...")
+        print(f"Recall@{k}: {recall:.4f}")
+        print()
+    
+    mean_recall = sum(recalls) / len(recalls) if recalls else 0.0
+    return mean_recall
+
+
 if __name__ == "__main__":
-    print("Enter your query:")
-    query = input("> ")
-
+    eval_file = "scr_eval.json"
     k = 10
-    results = retrieve_similar_cases(query, k=k)
-
-    print(f"\nTop {k} UNIQUE similar cases:\n")
-    for r in results:
-        print(f"Case ID: {r['case_id']} | Score: {r['score']}")
-        print(f"Text sample:\n{r['text_sample']}\n")
+    
+    mean_recall = evaluate_scr(eval_file, k=k)
+    print(f"Mean Recall@{k}: {mean_recall:.4f}")
